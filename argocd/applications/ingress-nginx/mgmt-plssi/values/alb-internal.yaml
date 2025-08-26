@@ -1,0 +1,12 @@
+---
+controller:
+  ingressClass: nginx-alb-internal
+  ingressClassResource:
+    name: nginx-alb-internal
+    controllerValue: k8s.io/ingress-nginx-alb-internal
+    default: true
+  replicaCount: 3
+  service:
+    enableHttp: false
+    nodePorts:
+      https: 30443

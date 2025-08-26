@@ -1,0 +1,10 @@
+---
+policy: sync
+registry: txt
+txtOwnerId: "external-dns"
+txtPrefix: "external-dns-"
+logLevel: info
+serviceAccount:
+  create: true
+sources:
+  - ingress

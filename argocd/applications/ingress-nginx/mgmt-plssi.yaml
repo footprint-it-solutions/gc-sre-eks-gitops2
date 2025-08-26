@@ -1,0 +1,15 @@
+---
+controller:
+  metrics:
+    enabled: true
+    # prometheusRule:
+    #   enabled: true
+    serviceMonitor:
+      enabled: false # Enable once Prometheus is deployed
+  minAvailable: 2
+  service:
+    externalTrafficPolicy: Local
+    ipFamilyPolicy: SingleStack
+    ipFamilies:
+      - IPv4
+    type: NodePort

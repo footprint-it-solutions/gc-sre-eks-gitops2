@@ -1,0 +1,26 @@
+---
+controller:
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - ingress-nginx-controller
+          topologyKey: "kubernetes.io/hostname"
+  allowSnippetAnnotations: true
+  config:
+    annotations-risk-level: Critical
+  ingressClassResource:
+    default: true
+  metrics:
+    enabled: true
+  minAvailable: 2
+  service:
+    externalTrafficPolicy: Local
+    ipFamilyPolicy: SingleStack
+    ipFamilies:
+      - IPv4
+    type: NodePort

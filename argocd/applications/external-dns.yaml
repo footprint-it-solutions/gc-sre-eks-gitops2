@@ -1,0 +1,40 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: external-dns
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  generators:
+    - clusters: {}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: external-dns-{{ index .metadata.labels "cluster-name" }}
+      name: external-dns-{{ index .metadata.labels "cluster-name" }}
+    spec:
+      destination:
+        namespace: external-dns
+        server: '{{ .server }}'
+      project: default
+      sources:
+        - helm:
+            releaseName: external-dns
+            valueFiles:
+              - $values/argocd/applications/external-dns/values.yaml
+              - $values/argocd/applications/external-dns/{{ index .metadata.labels "cluster-name" }}.yaml
+          repoURL: https://kubernetes-sigs.github.io/external-dns/
+          targetRevision: 1.15.1
+          chart: external-dns
+        - repoURL: https://github.com/footprint-it-solutions/gc-sre-eks-gitops2
+          targetRevision: main
+          ref: values
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

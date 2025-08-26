@@ -1,0 +1,48 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  name: ingress-nginx
+  namespace: argocd
+spec:
+  generators:
+    - matrix:
+        generators:
+          - clusters: {}
+          - git:
+              repoURL: https://github.com/footprint-it-solutions/gc-sre-eks-gitops2
+              revision: main
+              files:
+                - path: argocd/applications/ingress-nginx/{{ index .metadata.labels "cluster-name" }}/values/*.yaml
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  template:
+    metadata:
+      name: ingress-nginx-{{ index .metadata.labels "cluster-name" }}-{{ .path.filename | replace ".yaml" "" }}
+    spec:
+      destination:
+        namespace: ingress-nginx
+        server: '{{ .server }}'
+      project: default
+      sources:
+        - helm:
+            releaseName: ingress-nginx-{{ .path.filename | replace ".yaml" "" }}
+            valueFiles:
+              - $values/argocd/applications/ingress-nginx/values.yaml
+              - $values/argocd/applications/ingress-nginx/{{ index .metadata.labels "cluster-name" }}.yaml
+              - $values/argocd/applications/ingress-nginx/{{ index .metadata.labels "cluster-name" }}/values/{{ .path.filename }}
+          repoURL: https://kubernetes.github.io/ingress-nginx
+          targetRevision: 4.13.0
+          chart: ingress-nginx
+        - repoURL: https://github.com/footprint-it-solutions/gc-sre-eks-gitops2
+          targetRevision: main
+          ref: values
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
