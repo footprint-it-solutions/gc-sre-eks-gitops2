@@ -1,0 +1,23 @@
+---
+# We'll use a Kyverno policy to add ArgoCD tracking labels to all Crossplane resources.
+# customLabels:
+#   argocd.argoproj.io/instance: crossplane-k3s-devel
+
+
+extraObjects:
+  # Comment out for first install
+  - apiVersion: pkg.crossplane.io/v1beta1
+    kind: ControllerConfig
+    metadata:
+      name: aws-config
+      annotations:
+        # eks.amazonaws.com/role-arn: TBC
+        helm.sh/hook: post-install
+    spec:
+      podSecurityContext:
+        fsGroup: 2000
+
+provider:
+  packages:
+    - xpkg.upbound.io/upbound/provider-family-aws:v1.23.2
+    - xpkg.upbound.io/upbound/provider-aws-dynamodb:v1

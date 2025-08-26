@@ -1,0 +1,46 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  name: crossplane
+  namespace: argocd
+spec:
+  generators:
+    - clusters:
+        selector:
+          matchExpressions:
+            - key: cluster-name
+              operator: In
+              values:
+                - mgmt-plssi
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  template:
+    metadata:
+      name: crossplane-{{ index .metadata.labels "cluster-name" }}
+    spec:
+      project: default
+      sources:
+        - repoURL: https://github.com/footprint-it-solutions/gc-sre-eks-gitops2
+          targetRevision: main
+          ref: values
+        - repoURL: https://charts.crossplane.io/stable
+          targetRevision: 1.20.0
+          chart: crossplane
+          helm:
+            releaseName: crossplane
+            valueFiles:
+              - $values/argocd/applications/crossplane/values.yaml
+      destination:
+        server: '{{ .server }}'
+        namespace: crossplane-system
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
