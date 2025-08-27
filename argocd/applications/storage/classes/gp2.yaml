@@ -1,3 +1,4 @@
 ---
-type: gp2
 fsType: ext4
+provisioner: kubernetes.io/aws-ebs
+type: gp2

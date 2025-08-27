@@ -1,4 +1,5 @@
 ---
 fsType: ext4
 isDefault: "true"
+provisioner: ebs.csi.aws.com
 type: gp3
