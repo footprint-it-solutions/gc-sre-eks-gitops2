@@ -34,6 +34,27 @@ spec:
             releaseName: crossplane
             valueFiles:
               - $values/argocd/applications/crossplane/values.yaml
+            valuesObject:
+              extraObjects:
+                - apiVersion: pkg.crossplane.io/v1alpha1
+                  kind: DeploymentRuntimeConfig
+                  metadata:
+                    name: default
+                  annotations:
+                    helm.sh/hook: post-install
+                  spec:
+                    deploymentTemplate:
+                      spec:
+                        replicas: 1
+                        template:
+                          securityContext:
+                            runAsNonRoot: true
+                            runAsUser: 2000
+                            runAsGroup: 2000
+                      serviceAccountTemplate:
+                        metadata:
+                          annotations:
+                            eks.amazonaws.com/role-arn: arn:aws:iam::{{ index .metadata.labels "aws-account-id" }}:role/crossplane
       destination:
         server: '{{ .server }}'
         namespace: crossplane-system
