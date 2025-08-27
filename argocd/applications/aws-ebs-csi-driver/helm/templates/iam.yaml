@@ -26,6 +26,8 @@ spec:
       }
     description: IAM role for AWS EBS CSI Driver
     permissionsBoundary: {{ .Values.iamPermissionsBoundary }}
+  providerConfigRef:
+    name: crossplane-contrib-provider-aws
 
 ---
 apiVersion: iam.aws.crossplane.io/v1beta1
@@ -37,6 +39,8 @@ spec:
     policyArn: arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
     roleRef:
       name: aws-ebs-csi-driver
+  providerConfigRef:
+    name: crossplane-contrib-provider-aws
 
 ---
 apiVersion: iam.aws.crossplane.io/v1beta1
@@ -78,3 +82,5 @@ spec:
       }
     roleRef:
       name: aws-ebs-csi-driver
+  providerConfigRef:
+    name: crossplane-contrib-provider-aws
