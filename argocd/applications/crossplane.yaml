@@ -39,9 +39,9 @@ spec:
                 - apiVersion: pkg.crossplane.io/v1beta1
                   kind: DeploymentRuntimeConfig
                   metadata:
+                    annotations:
+                      helm.sh/hook: post-install
                     name: default
-                  annotations:
-                    helm.sh/hook: post-install
                   spec:
                     deploymentTemplate:
                       spec:
