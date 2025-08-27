@@ -47,14 +47,15 @@ spec:
                       spec:
                         replicas: 1
                         template:
-                          securityContext:
-                            runAsNonRoot: true
-                            runAsUser: 2000
-                            runAsGroup: 2000
-                      serviceAccountTemplate:
-                        metadata:
-                          annotations:
-                            eks.amazonaws.com/role-arn: arn:aws:iam::{{ index .metadata.labels "aws-account-id" }}:role/crossplane
+                          spec:
+                            securityContext:
+                              runAsNonRoot: true
+                              runAsUser: 2000
+                              runAsGroup: 2000
+                    serviceAccountTemplate:
+                      metadata:
+                        annotations:
+                          eks.amazonaws.com/role-arn: arn:aws:iam::{{ index .metadata.labels "aws-account-id" }}:role/crossplane
       destination:
         server: '{{ .server }}'
         namespace: crossplane-system
