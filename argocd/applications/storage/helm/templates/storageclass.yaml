@@ -5,7 +5,7 @@ kind: StorageClass
 metadata:
   annotations:
     storageclass.kubernetes.io/is-default-class: "{{ .Values.isDefault }}"
-  name: {{ .Values.name }}
+  name: {{ .Values.name | default .Values.type }}
 parameters:
   encrypted: "{{ .Values.encrypted }}"
   fsType: {{ .Values.fsType }}
