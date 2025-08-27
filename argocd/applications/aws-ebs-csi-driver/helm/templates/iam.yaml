@@ -37,8 +37,7 @@ metadata:
 spec:
   forProvider:
     policyArn: arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
-    roleRef:
-      name: aws-ebs-csi-driver
+    roleName: aws-ebs-csi-driver
   providerConfigRef:
     name: crossplane-contrib-provider-aws
 
@@ -49,7 +48,7 @@ metadata:
   name: aws-ebs-csi-driver-kms
 spec:
   forProvider:
-    policyDocument: |
+    document: |
       {
         "Statement": [
           {
@@ -80,7 +79,6 @@ spec:
         ],
         "Version": "2012-10-17"
       }
-    roleRef:
-      name: aws-ebs-csi-driver
+    roleName: aws-ebs-csi-driver
   providerConfigRef:
     name: crossplane-contrib-provider-aws
