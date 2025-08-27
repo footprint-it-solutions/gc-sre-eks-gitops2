@@ -1,12 +1,8 @@
 ---
-domainFilters:
-  - plssi.eu-central-1.mgmt-aws.skyott.com
 extraArgs:
   - --aws-zone-type=private
 provider: aws
 serviceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::228716742783:role/external-dns
   name: external-dns
   namespace: external-dns
 sources:

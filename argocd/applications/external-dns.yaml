@@ -26,6 +26,12 @@ spec:
             valueFiles:
               - $values/argocd/applications/external-dns/values.yaml
               - $values/argocd/applications/external-dns/{{ index .metadata.labels "cluster-name" }}.yaml
+            valuesObject:
+              domainFilters:
+                - '{{ index .metadata.labels "domain" }}'
+              serviceAccount:
+                annotations:
+                  eks.amazonaws.com/role-arn: arn:aws:iam::{{ index .metadata.labels "aws-account-id" }}:role/external-dns
           repoURL: https://kubernetes-sigs.github.io/external-dns/
           targetRevision: 1.15.1
           chart: external-dns
