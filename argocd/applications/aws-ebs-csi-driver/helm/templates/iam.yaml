@@ -26,5 +26,55 @@ spec:
       }
     description: IAM role for AWS EBS CSI Driver
     permissionsBoundary: {{ .Values.iamPermissionsBoundary }}
-  providerConfigRef:
-    name: default
+
+---
+apiVersion: iam.aws.m.upbound.io/v1beta1
+kind: RolePolicyAttachment
+metadata:
+  name: aws-ebs-csi-driver-policy
+spec:
+  forProvider:
+    policyArn: arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
+    roleRef:
+      name: aws-ebs-csi-driver
+
+---
+apiVersion: iam.aws.m.upbound.io/v1beta1
+kind: RolePolicy
+metadata:
+  name: aws-ebs-csi-driver-kms
+spec:
+  forProvider:
+    policyDocument: |
+      {
+        "Statement": [
+          {
+            "Action": [
+              "kms:RevokeGrant",
+              "kms:ListGrants",
+              "kms:CreateGrant"
+            ],
+            "Condition": {
+              "Bool": {
+                "kms:GrantIsForAWSResource": "true"
+              }
+            },
+            "Effect": "Allow",
+            "Resource": "{{ .Values.kmsKeyId }}",
+          },
+          {
+            "Action": [
+              "kms:ReEncrypt*",
+              "kms:GenerateDataKey*",
+              "kms:Encrypt",
+              "kms:DescribeKey",
+              "kms:Decrypt"
+            ],
+            "Effect": "Allow",
+            "Resource": "{{ .Values.kmsKeyId }}"
+          }
+        ],
+        "Version": "2012-10-17"
+      }
+    roleRef:
+      name: aws-ebs-csi-driver
