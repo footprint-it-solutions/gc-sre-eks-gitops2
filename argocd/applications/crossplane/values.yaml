@@ -19,6 +19,4 @@ extraObjects: []
 
 provider:
   packages:
-    - xpkg.upbound.io/upbound/provider-family-aws:v2.0.1
-    - xpkg.upbound.io/upbound/provider-aws-dynamodb:v2.0.1
-    - xpkg.upbound.io/upbound/provider-aws-iam:v2.0.1
+    - xpkg.upbound.io/crossplane-contrib/provider-aws:v0.54.2
