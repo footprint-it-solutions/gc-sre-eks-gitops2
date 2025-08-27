@@ -1,0 +1,30 @@
+---
+apiVersion: iam.aws.m.upbound.io/v1beta1
+kind: Role
+metadata:
+  name: aws-ebs-csi-driver
+spec:
+  forProvider:
+    assumeRolePolicyDocument: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Federated": "arn:aws:iam::{{ .Values.awsAccount }}:oidc-provider/{{ .Values.oidcProvider }}"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+              "StringEquals": {
+                "{{ .Values.oidcProvider }}:aud": "sts.amazonaws.com",
+                "{{ .Values.oidcProvider }}:sub": "system:serviceaccount:kube-system:{{ .Values.serviceAccountName }}"
+              }
+            }
+          }
+        ]
+      }
+    description: IAM role for AWS EBS CSI Driver
+    permissionsBoundary: {{ .Values.iamPermissionsBoundary }}
+  providerConfigRef:
+    name: default

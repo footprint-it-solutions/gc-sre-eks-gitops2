@@ -1,0 +1,46 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  name: aws-ebs-csi-driver
+  namespace: argocd
+spec:
+  generators:
+    - clusters: {}
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  template:
+    metadata:
+      name: aws-ebs-csi-driver-{{ index .metadata.labels "cluster-name" }}
+    spec:
+      project: default
+      sources:
+        - repoURL: https://github.com/footprint-it-solutions/gc-sre-eks-gitops2
+          helm:
+            releaseName: aws-ebs-csi-driver-dependencies
+            valuesObject:
+              awsAccountId: '{{ index .metadata.labels "aws-account-id" }}'
+              iamPermissionsBoundary: '{{ index .metadata.annotations "iam-permissions-boundary" }}'
+              oidcProvider: '{{ index .metadata.annotations "oidc-provider" }}'
+          path: argocd/applications/aws-ebs-csi-driver/helm
+          targetRevision: main
+        - repoURL: https://kubernetes-sigs.github.io/aws-ebs-csi-driver
+          targetRevision: 2.48.0
+          chart: aws-ebs-csi-driver
+          helm:
+            releaseName: aws-ebs-csi-driver
+            valuesObject:
+              controller:
+                serviceAccount:
+                  annotations:
+                    eks.amazonaws.com/role-arn: arn:aws:iam::{{ index .metadata.labels "aws-account-id" }}:role/aws-ebs-csi-driver
+      destination:
+        server: '{{ .server }}'
+        namespace: kube-system
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
