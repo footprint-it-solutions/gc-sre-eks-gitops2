@@ -36,7 +36,7 @@ spec:
               # Allow for per-cluster overrides, e.g. to set a different reclaimPolicy for prod clusters
               - $values/argocd/applications/storage/{{ index .metadata.labels "cluster-name" }}/{{ .path.filename }}
             valuesObject:
-              kmsKeyId: {{ index .metadata.annotations "kms-key-id" }}
+              kmsKeyId: '{{ index .metadata.annotations "kms-key-id" }}'
           repoURL: https://github.com/footprint-it-solutions/gc-sre-eks-gitops2
           path: argocd/applications/storage/helm
           targetRevision: main
