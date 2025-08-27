@@ -37,6 +37,7 @@ spec:
               - $values/argocd/applications/storage/{{ index .metadata.labels "cluster-name" }}/{{ .path.filename }}
           repoURL: https://github.com/footprint-it-solutions/gc-sre-eks-gitops2
           path: argocd/applications/storage
+          targetRevision: main
           chart: storageclass
         - repoURL: https://github.com/footprint-it-solutions/gc-sre-eks-gitops2
           targetRevision: main
