@@ -1,0 +1,5 @@
+---
+isDefault: false
+encrypted: true
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer

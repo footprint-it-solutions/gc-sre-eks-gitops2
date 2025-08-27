@@ -1,0 +1,47 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  name: storageclasses
+  namespace: argocd
+spec:
+  generators:
+    - matrix:
+        generators:
+          - clusters: {}
+          - git:
+              repoURL: https://github.com/footprint-it-solutions/gc-sre-eks-gitops2
+              revision: main
+              files:
+                - path: argocd/applications/storage/classes/*.yaml
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  template:
+    metadata:
+      name: storageclass-{{ .path.filename | replace ".yaml" "" }}-{{ index .metadata.labels "cluster-name" }}
+    spec:
+      destination:
+        namespace: kube-system
+        server: '{{ .server }}'
+      project: default
+      sources:
+        - helm:
+            ignoreMissingValueFiles: true
+            releaseName: storageclass-{{ .path.filename | replace ".yaml" "" }}
+            valueFiles:
+              - $values/argocd/applications/storage/classes/{{ .path.filename }}
+              # Allow for per-cluster overrides, e.g. to set a different reclaimPolicy for prod clusters
+              - $values/argocd/applications/storage/{{ index .metadata.labels "cluster-name" }}/{{ .path.filename }}
+          repoURL: https://github.com/footprint-it-solutions/gc-sre-eks-gitops2
+          path: argocd/applications/storage
+          chart: storageclass
+        - repoURL: https://github.com/footprint-it-solutions/gc-sre-eks-gitops2
+          targetRevision: main
+          ref: values
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
