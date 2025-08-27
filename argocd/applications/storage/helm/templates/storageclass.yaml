@@ -4,13 +4,13 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   annotations:
-    storageclass.kubernetes.io/is-default-class: "{{ .Values "isDefault" }}"
-  name: {{ .Values "name" }}
+    storageclass.kubernetes.io/is-default-class: "{{ .Values.isDefault }}"
+  name: {{ .Values.name }}
 parameters:
-  encrypted: "{{ .Values "encrypted" }}"
-  fsType: {{ .Values "fsType" }}
-  kmsKeyId: {{ .Values "kmsKeyId" }}
-  type: {{ .Values "type" }}
-provisioner: {{ .Values "provisioner" }}
-reclaimPolicy: {{ .Values "reclaimPolicy" }}
-volumeBindingMode: {{ .Values "volumeBindingMode" }}
+  encrypted: "{{ .Values.encrypted }}"
+  fsType: {{ .Values.fsType }}
+  kmsKeyId: {{ .Values.kmsKeyId }}
+  type: {{ .Values.type }}
+provisioner: {{ .Values.provisioner }}
+reclaimPolicy: {{ .Values.reclaimPolicy }}
+volumeBindingMode: {{ .Values.volumeBindingMode }}
