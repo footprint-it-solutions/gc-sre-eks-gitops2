@@ -36,7 +36,7 @@ spec:
               - $values/argocd/applications/crossplane/values.yaml
             valuesObject:
               extraObjects:
-                - apiVersion: pkg.crossplane.io/v1alpha1
+                - apiVersion: pkg.crossplane.io/v1beta1
                   kind: DeploymentRuntimeConfig
                   metadata:
                     name: default
