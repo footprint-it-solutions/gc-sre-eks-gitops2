@@ -46,7 +46,7 @@ spec:
                     serviceAccountTemplate:
                       metadata:
                         annotations:
-                          eks.amazonaws.com/role-arn: arn:aws:iam::{{ index .metadata.labels "aws-account-id" }}:role/crossplane
+                          eks.amazonaws.com/role-arn: arn:aws:iam::{{ index .metadata.labels "aws-account-id" }}:role/crossplane-test
       destination:
         server: '{{ .server }}'
         namespace: crossplane-system
