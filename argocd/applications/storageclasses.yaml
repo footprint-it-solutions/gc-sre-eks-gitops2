@@ -38,7 +38,6 @@ spec:
           repoURL: https://github.com/footprint-it-solutions/gc-sre-eks-gitops2
           path: argocd/applications/storage/helm
           targetRevision: main
-          chart: storageclass
         - repoURL: https://github.com/footprint-it-solutions/gc-sre-eks-gitops2
           targetRevision: main
           ref: values
